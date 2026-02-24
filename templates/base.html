@@ -56,17 +56,25 @@
 
             <div class="d-flex align-items-center ms-auto gap-3">
                 {% if user.is_authenticated %}
-                    <span class="navbar-text text-light small">
-                        {{ user.get_full_name|default:user.username }}
-                        {% if user.profile.role == 'ADMIN' %}
-                            <span class="badge badge-role-admin ms-1 px-2 py-1">Admin</span>
-                        {% else %}
-                            <span class="badge badge-role-researcher ms-1 px-2 py-1">Researcher</span>
-                        {% endif %}
-                    </span>
-                    <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light btn-sm px-3">Logout</a>
+                    <div class="dropdown">
+                        <a class="btn btn-outline-light btn-sm px-3 dropdown-toggle" href="#"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ user.get_full_name|default:user.username }}
+                            {% if user.profile.role == 'ADMIN' %}
+                                <span class="badge badge-role-admin ms-1 px-2 py-1">Admin</span>
+                            {% else %}
+                                <span class="badge badge-role-researcher ms-1 px-2 py-1">Researcher</span>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                            <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}">🔒 Change Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Logout</a></li>
+                        </ul>
+                    </div>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-sm px-3">Login</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-sm px-3">Register</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm px-3 fw-semibold">Login</a>
                 {% endif %}
             </div>
         </div>
