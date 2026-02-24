@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.projects',
     'apps.documents',
+    'apps.communication',
 ]
 
 MIDDLEWARE = [
