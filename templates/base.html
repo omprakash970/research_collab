@@ -19,18 +19,40 @@
         <a class="navbar-brand fw-bold" href="{% url 'accounts:dashboard' %}">
             🔬 ResearchCollab
         </a>
-        <div class="ms-auto">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNav" aria-controls="mainNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
             {% if user.is_authenticated %}
-                <span class="navbar-text text-light me-3">
-                    Hello, <strong>{{ user.username }}</strong>
-                    {% if user.profile %}
-                        <span class="badge bg-info ms-1">{{ user.profile.get_role_display }}</span>
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'projects:project_list' %}">Projects</a>
+                    </li>
+                    {% if user.profile.role == 'ADMIN' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'projects:project_create' %}">+ New Project</a>
+                        </li>
                     {% endif %}
-                </span>
-                <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
-            {% else %}
-                <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-sm">Login</a>
+                </ul>
             {% endif %}
+            <div class="ms-auto">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text text-light me-3">
+                        Hello, <strong>{{ user.username }}</strong>
+                        {% if user.profile %}
+                            <span class="badge bg-info ms-1">{{ user.profile.get_role_display }}</span>
+                        {% endif %}
+                    </span>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-sm">Login</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </nav>
