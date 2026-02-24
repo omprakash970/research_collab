@@ -1,0 +1,29 @@
+# ===========================================
+# researchcollab — Production Dependencies
+# ===========================================
+# Install with: pip install -r requirements.txt
+
+# Web framework
+Django==5.2.11
+
+# ASGI / WSGI utilities (Django dependency)
+asgiref==3.11.1
+
+# SQL parser (Django dependency)
+sqlparse==0.5.5
+
+# Timezone data (required on Windows & some Linux builds)
+tzdata==2025.3
+
+# PostgreSQL adapter
+psycopg2-binary==2.9.11
+
+# Production WSGI server (Render / Heroku / etc.)
+gunicorn==23.0.0
+
+# Static-file serving for production (works with Django)
+whitenoise==6.8.2
+
+# Python decouple — optional but recommended for env-var config
+# python-decouple==3.8
+
