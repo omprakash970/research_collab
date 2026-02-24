@@ -5,104 +5,116 @@
 {% block extra_css %}
 <style>
     .msg-bubble {
-        max-width: 75%;
+        max-width: 72%;
         word-wrap: break-word;
     }
     .msg-mine {
-        background-color: #d1e7dd;
+        background: linear-gradient(135deg, #d1e7dd 0%, #c3dfd5 100%);
+        border-bottom-right-radius: .25rem !important;
     }
     .msg-other {
-        background-color: #f8f9fa;
+        background: #ffffff;
+        border: 1px solid #e9ecef;
+        border-bottom-left-radius: .25rem !important;
     }
     .msg-thread {
-        max-height: 520px;
+        max-height: 540px;
         overflow-y: auto;
+        scroll-behavior: smooth;
     }
+    .msg-thread::-webkit-scrollbar { width: 6px; }
+    .msg-thread::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 3px; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-10">
+<div class="row justify-content-center">
+    <div class="col-lg-10">
 
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'projects:project_list' %}">Projects</a></li>
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item"><a href="{% url 'projects:project_list' %}" class="text-decoration-none">Projects</a></li>
                 <li class="breadcrumb-item">
-                    <a href="{% url 'projects:project_detail' pk=project.pk %}">{{ project.title }}</a>
+                    <a href="{% url 'projects:project_detail' pk=project.pk %}" class="text-decoration-none">{{ project.title|truncatechars:30 }}</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Discussion</li>
+                <li class="breadcrumb-item active text-muted" aria-current="page">Discussion</li>
             </ol>
         </nav>
 
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2>💬 Discussion</h2>
-                <p class="text-muted mb-0">
-                    Conversation thread for <strong>{{ project.title }}</strong>
-                </p>
+        <!-- Page Header Card -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fw-bold mb-1">💬 Discussion</h4>
+                        <p class="text-muted small mb-0">
+                            Conversation thread for <strong>{{ project.title }}</strong>
+                        </p>
+                    </div>
+                    <a href="{% url 'projects:project_detail' pk=project.pk %}"
+                       class="btn btn-outline-secondary btn-sm px-3">← Back to Project</a>
+                </div>
             </div>
-            <a href="{% url 'projects:project_detail' pk=project.pk %}"
-               class="btn btn-outline-secondary btn-sm">← Back to Project</a>
         </div>
 
-        <!-- Message Thread -->
+        <!-- Message Thread Card -->
         <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body msg-thread p-4" id="messageThread">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="fw-bold mb-0 small text-muted text-uppercase">Message Thread</h6>
+            </div>
+            <div class="card-body msg-thread p-4" id="messageThread" style="background: #f8f9fa;">
                 {% if thread %}
                     {% for msg in thread %}
                         {% if msg.sender == request.user %}
-                            <!-- Current user's message → right-aligned -->
+                            <!-- Own message → right -->
                             <div class="d-flex justify-content-end mb-3">
                                 <div class="msg-bubble msg-mine rounded-3 p-3 shadow-sm">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <small class="fw-semibold text-success me-3">You</small>
-                                        <small class="text-muted">{{ msg.created_at|date:"M d, Y H:i" }}</small>
+                                    <div class="d-flex justify-content-between align-items-center mb-1 gap-3">
+                                        <small class="fw-bold text-success">You</small>
+                                        <small class="text-muted" style="font-size:.7rem;">{{ msg.created_at|date:"M d, Y · H:i" }}</small>
                                     </div>
-                                    <p class="mb-0" style="white-space: pre-wrap;">{{ msg.message }}</p>
+                                    <p class="mb-0 small" style="white-space: pre-wrap;">{{ msg.message }}</p>
                                 </div>
                             </div>
                         {% else %}
-                            <!-- Other user's message → left-aligned -->
+                            <!-- Other message → left -->
                             <div class="d-flex justify-content-start mb-3">
                                 <div class="msg-bubble msg-other rounded-3 p-3 shadow-sm">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <small class="fw-semibold text-primary me-3">{{ msg.sender.username }}</small>
-                                        <small class="text-muted">{{ msg.created_at|date:"M d, Y H:i" }}</small>
+                                    <div class="d-flex justify-content-between align-items-center mb-1 gap-3">
+                                        <small class="fw-bold text-primary">{{ msg.sender.username }}</small>
+                                        <small class="text-muted" style="font-size:.7rem;">{{ msg.created_at|date:"M d, Y · H:i" }}</small>
                                     </div>
-                                    <p class="mb-0" style="white-space: pre-wrap;">{{ msg.message }}</p>
+                                    <p class="mb-0 small" style="white-space: pre-wrap;">{{ msg.message }}</p>
                                 </div>
                             </div>
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    <div class="text-center text-muted py-5">
-                        <h5>No messages yet.</h5>
-                        <p>Start the conversation by posting the first message below.</p>
+                    <div class="text-center py-5">
+                        <div class="stat-icon text-muted mb-3">💬</div>
+                        <h6 class="text-muted fw-semibold">No messages yet</h6>
+                        <p class="text-muted small mb-0">Start the conversation by posting the first message below.</p>
                     </div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Post Message Form -->
+        <!-- Post Message Form Card -->
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
                 <form method="post" novalidate>
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Post a Message</label>
-                        {{ form.message }}
-                        {% if form.message.errors %}
-                            <div class="invalid-feedback d-block">
-                                {% for error in form.message.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary">
-                            Send Message
+                    <label class="form-label fw-semibold small text-secondary">Post a Message</label>
+                    {{ form.message }}
+                    {% if form.message.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.message.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary px-4">
+                            Send Message →
                         </button>
                     </div>
                 </form>
@@ -115,11 +127,8 @@
 
 {% block extra_js %}
 <script>
-    // Auto-scroll the message thread to the bottom on page load
-    const thread = document.getElementById('messageThread');
-    if (thread) {
-        thread.scrollTop = thread.scrollHeight;
-    }
+    // Auto-scroll message thread to bottom on page load
+    const t = document.getElementById('messageThread');
+    if (t) t.scrollTop = t.scrollHeight;
 </script>
 {% endblock %}
-

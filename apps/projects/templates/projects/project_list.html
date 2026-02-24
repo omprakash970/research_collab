@@ -3,86 +3,97 @@
 {% block title %}Projects — ResearchCollab{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-11">
+<div class="row justify-content-center">
+    <div class="col-lg-11">
 
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2>📁 Projects</h2>
-                <p class="text-muted mb-0">
+        <!-- Page Header Card -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fw-bold mb-1">📁 Projects</h4>
+                        <p class="text-muted mb-0 small">
+                            {% if is_admin %}
+                                All research projects on the platform.
+                            {% else %}
+                                Projects you are assigned to.
+                            {% endif %}
+                        </p>
+                    </div>
                     {% if is_admin %}
-                        All research projects on the platform.
-                    {% else %}
-                        Projects you are assigned to.
+                        <a href="{% url 'projects:project_create' %}" class="btn btn-primary px-4 shadow-sm">
+                            ＋ New Project
+                        </a>
                     {% endif %}
-                </p>
+                </div>
             </div>
-            {% if is_admin %}
-                <a href="{% url 'projects:project_create' %}" class="btn btn-primary">
-                    + New Project
-                </a>
-            {% endif %}
         </div>
 
-        <!-- Project Table / Cards -->
+        <!-- Project Table -->
         {% if projects %}
-            <div class="table-responsive">
-                <table class="table table-hover align-middle bg-white shadow-sm rounded">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Title</th>
-                            <th>Status</th>
-                            {% if is_admin %}<th>Created By</th>{% endif %}
-                            <th>Researchers</th>
-                            <th>Created</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for project in projects %}
-                            <tr>
-                                <td class="fw-semibold">{{ project.title }}</td>
-                                <td>
-                                    {% if project.status == 'ACTIVE' %}
-                                        <span class="badge bg-success">Active</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">Completed</span>
-                                    {% endif %}
-                                </td>
-                                {% if is_admin %}
-                                    <td>{{ project.created_by.username }}</td>
-                                {% endif %}
-                                <td>
-                                    {% for r in project.researchers.all %}
-                                        <span class="badge bg-light text-dark border">{{ r.username }}</span>
-                                    {% empty %}
-                                        <span class="text-muted">—</span>
-                                    {% endfor %}
-                                </td>
-                                <td>{{ project.created_at|date:"M d, Y" }}</td>
-                                <td class="text-end">
-                                    <a href="{% url 'projects:project_detail' pk=project.pk %}"
-                                       class="btn btn-outline-primary btn-sm">View</a>
-                                    {% if is_admin %}
-                                        <a href="{% url 'projects:project_edit' pk=project.pk %}"
-                                           class="btn btn-outline-warning btn-sm">Edit</a>
-                                    {% endif %}
-                                </td>
+            <div class="card shadow-sm border-0">
+                <div class="table-responsive mb-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr class="table-dark">
+                                <th class="ps-4">Title</th>
+                                <th>Status</th>
+                                {% if is_admin %}<th>Created By</th>{% endif %}
+                                <th>Researchers</th>
+                                <th>Created</th>
+                                <th class="text-end pe-4">Actions</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for project in projects %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <a href="{% url 'projects:project_detail' pk=project.pk %}" class="text-decoration-none fw-semibold">
+                                            {{ project.title }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if project.status == 'ACTIVE' %}
+                                            <span class="badge bg-success bg-opacity-10 text-success border border-success px-2 py-1">● Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-2 py-1">● Completed</span>
+                                        {% endif %}
+                                    </td>
+                                    {% if is_admin %}
+                                        <td class="text-muted">{{ project.created_by.username }}</td>
+                                    {% endif %}
+                                    <td>
+                                        {% for r in project.researchers.all %}
+                                            <span class="badge bg-light text-dark border me-1">{{ r.username }}</span>
+                                        {% empty %}
+                                            <span class="text-muted small">—</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td class="text-muted small">{{ project.created_at|date:"M d, Y" }}</td>
+                                    <td class="text-end pe-4">
+                                        <a href="{% url 'projects:project_detail' pk=project.pk %}"
+                                           class="btn btn-outline-primary btn-sm px-3">View</a>
+                                        {% if is_admin %}
+                                            <a href="{% url 'projects:project_edit' pk=project.pk %}"
+                                               class="btn btn-outline-warning btn-sm px-3">Edit</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         {% else %}
-            <div class="card shadow-sm border-0 text-center py-5">
-                <div class="card-body">
-                    <h5 class="text-muted">No projects found.</h5>
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center py-5">
+                    <div class="stat-icon text-muted mb-3">📂</div>
+                    <h5 class="text-muted fw-semibold">No projects found</h5>
                     {% if is_admin %}
-                        <p class="text-muted">Get started by creating your first research project.</p>
-                        <a href="{% url 'projects:project_create' %}" class="btn btn-primary">+ New Project</a>
+                        <p class="text-muted small mb-3">Get started by creating your first research project.</p>
+                        <a href="{% url 'projects:project_create' %}" class="btn btn-primary px-4">＋ New Project</a>
                     {% else %}
-                        <p class="text-muted">You have not been assigned to any projects yet.</p>
+                        <p class="text-muted small mb-0">You have not been assigned to any projects yet.</p>
                     {% endif %}
                 </div>
             </div>
@@ -91,4 +102,3 @@
     </div>
 </div>
 {% endblock %}
-

@@ -1,9 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.shortcuts import redirect, render
 
+from apps.accounts.forms import RegistrationForm
 from apps.accounts.models import Profile
 
 
@@ -34,6 +35,94 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'You have been logged out.')
     return redirect('accounts:login')
+
+
+# ──────────────────────────────────────────────
+# Registration
+# ──────────────────────────────────────────────
+
+def register_view(request):
+    """
+    Register a new user account.
+
+    The Profile (with default role RESEARCHER) is auto-created by the
+    post_save signal — no role field is exposed on the form.
+    """
+    if request.user.is_authenticated:
+        return redirect('accounts:dashboard')
+
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                'Account created successfully! You can now sign in.',
+            )
+            return redirect('accounts:login')
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'accounts/register.html', {'form': form})
+
+
+# ──────────────────────────────────────────────
+# Password Management
+# ──────────────────────────────────────────────
+
+@login_required
+def password_change_view(request):
+    """Allow authenticated users to change their password."""
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password has been changed successfully.')
+            return redirect('accounts:password_change_done')
+    else:
+        form = PasswordChangeForm(request.user)
+
+    # Apply Bootstrap classes to all fields
+    for field in form.fields.values():
+        field.widget.attrs.update({'class': 'form-control form-control-lg'})
+
+    return render(request, 'accounts/password_change.html', {'form': form})
+
+
+@login_required
+def password_change_done_view(request):
+    """Confirmation page shown after a successful password change."""
+    return render(request, 'accounts/password_change_done.html')
+
+
+@login_required
+def password_set_view(request):
+    """
+    Allow users without a usable password to set one.
+
+    This covers edge cases such as accounts created via the admin
+    panel without a password or future social-auth integrations.
+    """
+    if request.user.has_usable_password():
+        messages.info(request, 'You already have a password. Use "Change Password" instead.')
+        return redirect('accounts:password_change')
+
+    if request.method == 'POST':
+        form = SetPasswordForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password has been set successfully.')
+            return redirect('accounts:dashboard')
+    else:
+        form = SetPasswordForm(request.user)
+
+    # Apply Bootstrap classes to all fields
+    for field in form.fields.values():
+        field.widget.attrs.update({'class': 'form-control form-control-lg'})
+
+    return render(request, 'accounts/password_set.html', {'form': form})
 
 
 # ──────────────────────────────────────────────

@@ -9,82 +9,102 @@
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
+    <style>
+        /* ── Minimal global polish (no external CSS files) ── */
+        body { min-height: 100vh; display: flex; flex-direction: column; }
+        main.container { flex: 1; }
+        .navbar { box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+        .brand-accent { color: #6ea8fe; }
+        .card { border-radius: .75rem !important; }
+        .breadcrumb { background: transparent; padding: 0; margin-bottom: 0; }
+        .badge-role-admin { background: linear-gradient(135deg,#dc3545,#c82333); }
+        .badge-role-researcher { background: linear-gradient(135deg,#0d6efd,#0a58ca); }
+        .stat-icon { font-size: 2rem; line-height: 1; }
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-light">
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+<!-- ── Navbar ── -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'accounts:dashboard' %}">
-            🔬 ResearchCollab
+        <a class="navbar-brand fw-bold fs-5" href="{% url 'accounts:dashboard' %}">
+            🔬 <span class="brand-accent">Research</span>Collab
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
                 data-bs-target="#mainNav" aria-controls="mainNav"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="mainNav">
             {% if user.is_authenticated %}
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav me-auto ms-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                        <a class="nav-link px-3" href="{% url 'accounts:dashboard' %}">🏠 Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'projects:project_list' %}">Projects</a>
+                        <a class="nav-link px-3" href="{% url 'projects:project_list' %}">📁 Projects</a>
                     </li>
                     {% if user.profile.role == 'ADMIN' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'projects:project_create' %}">+ New Project</a>
+                            <a class="nav-link px-3 text-warning" href="{% url 'projects:project_create' %}">＋ New Project</a>
                         </li>
                     {% endif %}
                 </ul>
             {% endif %}
-            <div class="ms-auto">
+
+            <div class="d-flex align-items-center ms-auto gap-3">
                 {% if user.is_authenticated %}
-                    <span class="navbar-text text-light me-3">
-                        Hello, <strong>{{ user.username }}</strong>
-                        {% if user.profile %}
-                            <span class="badge bg-info ms-1">{{ user.profile.get_role_display }}</span>
+                    <span class="navbar-text text-light small">
+                        {{ user.get_full_name|default:user.username }}
+                        {% if user.profile.role == 'ADMIN' %}
+                            <span class="badge badge-role-admin ms-1 px-2 py-1">Admin</span>
+                        {% else %}
+                            <span class="badge badge-role-researcher ms-1 px-2 py-1">Researcher</span>
                         {% endif %}
                     </span>
-                    <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light btn-sm px-3">Logout</a>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-sm">Login</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-sm px-3">Login</a>
                 {% endif %}
             </div>
         </div>
     </div>
 </nav>
 
-<!-- Messages -->
-<div class="container">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert
-                {% if message.tags == 'error' %}alert-danger
-                {% elif message.tags == 'debug' %}alert-secondary
-                {% elif 'success' in message.tags %}alert-success
-                {% elif 'warning' in message.tags %}alert-warning
-                {% elif 'info' in message.tags %}alert-info
-                {% else %}alert-primary
-                {% endif %}
-                alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
+<!-- ── Flash Messages ── -->
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+        <div class="alert
+            {% if message.tags == 'error' %}alert-danger
+            {% elif message.tags == 'debug' %}alert-secondary
+            {% elif 'success' in message.tags %}alert-success
+            {% elif 'warning' in message.tags %}alert-warning
+            {% elif 'info' in message.tags %}alert-info
+            {% else %}alert-primary
+            {% endif %}
+            alert-dismissible fade show shadow-sm border-0 rounded-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
 </div>
+{% endif %}
 
-<!-- Main Content -->
-<main class="container">
+<!-- ── Main Content ── -->
+<main class="container py-4">
     {% block content %}{% endblock %}
 </main>
 
-<!-- Footer -->
-<footer class="text-center text-muted py-4 mt-5 border-top">
-    <small>&copy; {% now "Y" %} ResearchCollab — Academic Research Collaboration Platform</small>
+<!-- ── Footer ── -->
+<footer class="border-top mt-auto">
+    <div class="container text-center py-4">
+        <small class="text-muted">
+            &copy; {% now "Y" %} <strong>ResearchCollab</strong> — Academic Research Collaboration Platform
+        </small>
+    </div>
 </footer>
 
 <!-- Bootstrap 5 JS Bundle -->

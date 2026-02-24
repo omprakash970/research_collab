@@ -3,44 +3,70 @@
 {% block title %}Researcher Dashboard — ResearchCollab{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-10">
+<div class="row justify-content-center">
+    <div class="col-lg-11">
 
-        <div class="mb-4">
-            <h2>Researcher Dashboard</h2>
-            <p class="text-muted">Welcome, <strong>{{ user.username }}</strong>. You are logged in as
-                <span class="badge bg-primary">Researcher</span>.
-            </p>
+        <!-- Welcome Banner -->
+        <div class="card shadow-sm border-0 mb-4" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+            <div class="card-body p-4 text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fw-bold mb-1">Welcome back, {{ user.get_full_name|default:user.username }} 👋</h3>
+                        <p class="mb-0 opacity-75">You are signed in as
+                            <span class="badge bg-white text-primary px-2 py-1">Researcher</span>
+                        </p>
+                    </div>
+                    <div class="d-none d-md-block">
+                        <span style="font-size: 3rem;">🔬</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="row g-4">
+        <!-- Section: Your workspace -->
+        <h6 class="text-uppercase text-muted fw-bold small mb-3 mt-4">🗂️ Your Workspace</h6>
+        <div class="row g-4 mb-4">
             <div class="col-md-4">
                 <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-primary">📁 My Projects</h5>
-                        <p class="card-text text-muted">View the research projects you are assigned to.</p>
-                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary btn-sm">View Projects</a>
+                    <div class="card-body p-4 text-center">
+                        <div class="stat-icon mb-3">📁</div>
+                        <h6 class="fw-bold">My Projects</h6>
+                        <p class="text-muted small mb-3">View the research projects you have been assigned to collaborate on.</p>
+                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary btn-sm px-4">View Projects</a>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-success">📄 Documents</h5>
-                        <p class="card-text text-muted">Access and upload documents for your assigned projects.</p>
-                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-success btn-sm">Open a Project</a>
+                    <div class="card-body p-4 text-center">
+                        <div class="stat-icon mb-3">📄</div>
+                        <h6 class="fw-bold">Documents</h6>
+                        <p class="text-muted small mb-3">Access and upload documents for the projects you're working on.</p>
+                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-success btn-sm px-4">Open a Project</a>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-info">💬 Discussions</h5>
-                        <p class="card-text text-muted">Collaborate with your team through project discussions.</p>
-                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-info btn-sm">Open a Project</a>
+                    <div class="card-body p-4 text-center">
+                        <div class="stat-icon mb-3">💬</div>
+                        <h6 class="fw-bold">Discussions</h6>
+                        <p class="text-muted small mb-3">Collaborate with your team through project discussion threads.</p>
+                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-info btn-sm px-4">Open a Project</a>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tip card -->
+        <div class="card shadow-sm border-0 bg-white">
+            <div class="card-body px-4 py-3 d-flex align-items-center gap-3">
+                <span class="stat-icon text-warning">💡</span>
+                <div>
+                    <h6 class="fw-bold mb-0">Getting Started</h6>
+                    <small class="text-muted">Navigate to <strong>Projects</strong> to see your assignments, upload documents, and join discussions.</small>
                 </div>
             </div>
         </div>
@@ -48,4 +74,3 @@
     </div>
 </div>
 {% endblock %}
-
