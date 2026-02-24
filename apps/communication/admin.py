@@ -9,6 +9,7 @@ class ProjectMessageAdmin(admin.ModelAdmin):
     list_filter = ('project', 'created_at')
     search_fields = ('message', 'sender__username', 'project__title')
     readonly_fields = ('created_at',)
+    date_hierarchy = 'created_at'
 
     @admin.display(description='Message')
     def short_message(self, obj):

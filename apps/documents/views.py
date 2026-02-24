@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import Profile
 from apps.documents.forms import DocumentUploadForm
-from apps.documents.models import Document
 from apps.projects.models import ResearchProject
 
 

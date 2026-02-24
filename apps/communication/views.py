@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import Profile
 from apps.communication.forms import ProjectMessageForm
-from apps.communication.models import ProjectMessage
 from apps.projects.models import ResearchProject
 
 
@@ -21,6 +20,7 @@ def _user_can_access_project(user, project):
 
 
 def _forbidden_response(msg='You do not have permission to access this discussion.'):
+    """Return an HTTP 403 response with a human-readable message."""
     return HttpResponseForbidden(
         f'<h3 style="text-align:center;margin-top:60px;">403 — {msg}</h3>'
     )
@@ -34,8 +34,10 @@ def _forbidden_response(msg='You do not have permission to access this discussio
 def project_messages(request, project_id):
     """
     Display the message thread for a project and handle new message posts.
-    ADMIN → can access any project's discussion.
-    RESEARCHER → can access only if assigned to the project.
+
+    Access control:
+        ADMIN      → can access any project's discussion.
+        RESEARCHER → can access only if assigned to the project.
     """
     project = get_object_or_404(ResearchProject, pk=project_id)
 
@@ -50,6 +52,7 @@ def project_messages(request, project_id):
             msg.project = project
             msg.sender = request.user
             msg.save()
+            messages.success(request, 'Message posted.')
             return redirect('communication:project_messages', project_id=project.pk)
     else:
         form = ProjectMessageForm()
