@@ -9,6 +9,7 @@ are loaded from environment variables.
 Docs: https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # ──────────────────────────────────────────────
@@ -25,11 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h^2qifj9hvqtkn8%#b%pjez+kzvl3iiu94c=w)rf$76-f&be(q'
 
 # SECURITY WARNING: never run with DEBUG = True in production.
-DEBUG = True
+# Reads from environment variable; defaults to False for production safety.
+# Set DEBUG=True in your local .env or shell for development.
+DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-# In production, list only your actual domain(s) here.
-# 'testserver' is included for Django's test client (manage.py test).
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
+# Allow all hosts for Render deployment.
+# In a stricter setup, list only your actual domain(s).
+ALLOWED_HOSTS = ['*']
 
 
 # ──────────────────────────────────────────────
@@ -59,6 +62,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',        # Serve static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -147,7 +151,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 # ──────────────────────────────────────────────
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Directory where `collectstatic` gathers all static files for production.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise compressed & cached static file storage for production.
+STORAGES = {
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 
 # ──────────────────────────────────────────────

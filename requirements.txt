@@ -19,10 +19,10 @@ tzdata==2025.3
 psycopg2-binary==2.9.11
 
 # Production WSGI server (Render / Heroku / etc.)
-gunicorn==23.0.0
+gunicorn==25.1.0
 
 # Static-file serving for production (works with Django)
-whitenoise==6.8.2
+whitenoise==6.11.0
 
 # Python decouple — optional but recommended for env-var config
 # python-decouple==3.8
