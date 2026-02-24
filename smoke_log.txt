@@ -1,0 +1,26 @@
+
+=== Phase 1: Authentication & Roles ===
+  [FAIL] Login page loads (200)
+  [FAIL] Dashboard requires auth (302→login)
+  [FAIL] Admin login (302→dashboard)
+  [FAIL] Admin dashboard redirect (302→admin)
+  [FAIL] Admin dashboard loads (200)
+  [PASS] Admin dashboard: no 'coming soon' text
+  [FAIL] Admin blocked from researcher dashboard (302)
+  [FAIL] Researcher login (302)
+  [FAIL] Researcher dashboard loads (200)
+  [PASS] Researcher dashboard: no 'coming soon' text
+  [FAIL] Researcher blocked from admin dashboard (302)
+
+=== Phase 2: Project Management ===
+  [FAIL] Admin: create project (302)
+Traceback (most recent call last):
+  File "C:\Users\Oppie_549\PycharmProjects\researchcollab\smoke_test.py", line 83, in <module>
+    project = ResearchProject.objects.get(title='P5 Smoke: Final Test Project')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Oppie_549\PycharmProjects\researchcollab\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Oppie_549\PycharmProjects\researchcollab\.venv\Lib\site-packages\django\db\models\query.py", line 635, in get
+    raise self.model.DoesNotExist(
+apps.projects.models.ResearchProject.DoesNotExist: ResearchProject matching query does not exist.
