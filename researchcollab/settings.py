@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-h^2qifj9hvqtkn8%#b%pjez+kzvl3iiu94c=w)rf$76-f&be(q
 DEBUG = True
 
 # In production, list only your actual domain(s) here.
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# 'testserver' is included for Django's test client (manage.py test).
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
 
 
 # ──────────────────────────────────────────────
