@@ -61,6 +61,17 @@
                     </ul>
                 </div>
 
+                <!-- Documents Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white fw-semibold">📄 Documents</div>
+                    <div class="card-body d-grid gap-2">
+                        <a href="{% url 'documents:document_list' project_id=project.pk %}"
+                           class="btn btn-outline-primary">View Documents</a>
+                        <a href="{% url 'documents:document_upload' project_id=project.pk %}"
+                           class="btn btn-outline-success btn-sm">📤 Upload New</a>
+                    </div>
+                </div>
+
                 <!-- Actions (ADMIN only) -->
                 {% if is_admin %}
                     <div class="card shadow-sm border-0">
