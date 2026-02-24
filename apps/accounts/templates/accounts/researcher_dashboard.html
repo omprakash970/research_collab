@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Researcher Dashboard — ResearchCollab{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-10">
+
+        <div class="mb-4">
+            <h2>Researcher Dashboard</h2>
+            <p class="text-muted">Welcome, <strong>{{ user.username }}</strong>. You are logged in as
+                <span class="badge bg-primary">Researcher</span>.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">📁 My Projects</h5>
+                        <p class="card-text text-muted">Your research projects will appear here in upcoming phases.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">📝 Documents</h5>
+                        <p class="card-text text-muted">Document management features coming soon.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-info">💬 Messages</h5>
+                        <p class="card-text text-muted">Collaboration messaging will be available in a future phase.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
