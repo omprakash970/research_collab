@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h^2qifj9hvqtkn8%#b%pjez+kzvl3iiu94c=w)rf$76-f&be(q'
 
 # SECURITY WARNING: never run with DEBUG = True in production.
-# Reads from environment variable; defaults to False for production safety.
-# Set DEBUG=True in your local .env or shell for development.
-DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 'yes')
+# Defaults to True for local development.
+# Set DEBUG=False in your production environment.
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 # Allow all hosts for Render deployment.
 # In a stricter setup, list only your actual domain(s).
@@ -157,11 +157,14 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise compressed & cached static file storage for production.
-STORAGES = {
-    'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-    },
-}
+# In development (DEBUG=True) Django's default storage is used instead,
+# so you don't need to run collectstatic during development.
+if not DEBUG:
+    STORAGES = {
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
 
 
 # ──────────────────────────────────────────────
