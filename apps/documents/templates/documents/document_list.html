@@ -67,9 +67,17 @@
                                     </td>
                                     <td class="text-muted small">{{ doc.uploaded_at|date:"M d, Y H:i" }}</td>
                                     <td class="text-end pe-4">
-                                        <a href="{{ doc.file.url }}" class="btn btn-success btn-sm px-3" download>
-                                            <i class="bi bi-download me-1"></i> Download
-                                        </a>
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a href="{{ doc.file.url }}" class="btn btn-success btn-sm px-3" download>
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </a>
+                                            {% if is_admin or doc.uploaded_by == request.user %}
+                                                <button type="button" class="btn btn-outline-danger btn-sm px-3"
+                                                        data-bs-toggle="modal" data-bs-target="#deleteModal{{ doc.pk }}">
+                                                    <i class="bi bi-trash3 me-1"></i> Delete
+                                                </button>
+                                            {% endif %}
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -77,6 +85,47 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Delete Confirmation Modals -->
+            {% for doc in documents %}
+                {% if is_admin or doc.uploaded_by == request.user %}
+                <div class="modal fade" id="deleteModal{{ doc.pk }}" tabindex="-1" aria-labelledby="deleteLabel{{ doc.pk }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content" style="background: var(--rc-bg-elevated) !important; border: 1px solid var(--rc-border-light) !important;">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold" id="deleteLabel{{ doc.pk }}">
+                                    <i class="bi bi-exclamation-triangle-fill me-2" style="color: var(--rc-danger);"></i>Delete Document
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-2">Are you sure you want to delete this document?</p>
+                                <div class="p-3 rounded-3" style="background: var(--rc-bg-body); border: 1px solid var(--rc-border);">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-file-earmark-text" style="color: var(--rc-primary); font-size: 1.2rem;"></i>
+                                        <div>
+                                            <strong>{{ doc.title }}</strong>
+                                            <br><small class="text-muted">{{ doc.filename }} &middot; Uploaded {{ doc.uploaded_at|date:"M d, Y" }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>This action cannot be undone. The file will be permanently removed.</p>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal">Cancel</button>
+                                <form method="post" action="{% url 'documents:document_delete' project_id=project.pk document_id=doc.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger px-4">
+                                        <i class="bi bi-trash3 me-1"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+
         {% else %}
             <div class="card card-elevated" style="border: none !important;">
                 <div class="empty-state">

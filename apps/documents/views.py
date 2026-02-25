@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.models import Profile
 from apps.documents.forms import DocumentUploadForm
+from apps.documents.models import Document
 from apps.projects.models import ResearchProject
 
 
@@ -87,4 +88,44 @@ def document_upload(request, project_id):
         'project': project,
     }
     return render(request, 'documents/document_upload.html', context)
+
+
+# ──────────────────────────────────────────────
+# Document Delete
+# ──────────────────────────────────────────────
+
+@login_required
+def document_delete(request, project_id, document_id):
+    """
+    Delete a document from a project.
+    Only the uploader or an ADMIN can delete a document.
+    Requires POST to prevent accidental deletion via GET.
+    """
+    project = get_object_or_404(ResearchProject, pk=project_id)
+    document = get_object_or_404(Document, pk=document_id, project=project)
+
+    is_admin = request.user.profile.role == Profile.Role.ADMIN
+    is_uploader = document.uploaded_by == request.user
+
+    if not (is_admin or is_uploader):
+        return HttpResponseForbidden(
+            '<h3 style="text-align:center;margin-top:60px;">'
+            '403 — You do not have permission to delete this document.'
+            '</h3>'
+        )
+
+    if request.method == 'POST':
+        title = document.title
+        document.file.delete(save=False)  # Delete the actual file from storage
+        document.delete()
+        messages.success(request, f'Document "{title}" deleted successfully.')
+        return redirect('documents:document_list', project_id=project.pk)
+
+    context = {
+        'project': project,
+        'document': document,
+    }
+    return render(request, 'documents/document_confirm_delete.html', context)
+
+
 

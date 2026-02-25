@@ -40,6 +40,7 @@ def routes_view(request):
             'items': [
                 {'name': 'Document List', 'url': '/documents/project/<project_id>/', 'method': 'GET', 'description': 'List documents for a project'},
                 {'name': 'Upload Document', 'url': '/documents/project/<project_id>/upload/', 'method': 'GET / POST', 'description': 'Upload a document to a project'},
+                {'name': 'Delete Document', 'url': '/documents/project/<project_id>/delete/<document_id>/', 'method': 'GET / POST', 'description': 'Delete a document (uploader or ADMIN)'},
             ],
         },
         {
