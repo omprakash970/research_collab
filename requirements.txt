@@ -18,6 +18,9 @@ tzdata==2025.3
 # PostgreSQL adapter
 psycopg2-binary==2.9.11
 
+# Database URL parser (for Render / Heroku DATABASE_URL env var)
+dj-database-url==2.3.0
+
 # Production WSGI server (Render / Heroku / etc.)
 gunicorn==25.1.0
 

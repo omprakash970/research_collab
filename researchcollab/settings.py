@@ -1,16 +1,16 @@
 """
 Django settings for researchcollab project.
 
-This configuration is intended for **local development** only.
-For production deployment, ensure DEBUG is False, SECRET_KEY is
-rotated, ALLOWED_HOSTS is restricted, and database credentials
-are loaded from environment variables.
+- In production (Render), all sensitive values come from environment variables.
+- Locally, fallback defaults are used so the app runs without any env setup.
 
 Docs: https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
 from pathlib import Path
+
+import dj_database_url
 
 # ──────────────────────────────────────────────
 # Base directory — all paths are relative to this
@@ -22,17 +22,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 # ──────────────────────────────────────────────
 
-# SECURITY WARNING: replace this key before deploying to production.
-SECRET_KEY = 'django-insecure-h^2qifj9hvqtkn8%#b%pjez+kzvl3iiu94c=w)rf$76-f&be(q'
+# In production Render sets SECRET_KEY as an env var.
+# Locally the fallback insecure key is used (fine for dev only).
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-h^2qifj9hvqtkn8%#b%pjez+kzvl3iiu94c=w)rf$76-f&be(q',
+)
 
-# SECURITY WARNING: never run with DEBUG = True in production.
-# Defaults to True for local development.
-# Set DEBUG=False in your production environment.
+# Set DEBUG=False on Render via env var. Locally defaults to True.
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-# Allow all hosts for Render deployment.
-# In a stricter setup, list only your actual domain(s).
-ALLOWED_HOSTS = ['*']
+# Render provides the RENDER_EXTERNAL_HOSTNAME env var.
+# Accept that hostname + localhost for local dev.
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# CSRF trusted origins for Render
+CSRF_TRUSTED_ORIGINS = []
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 
 
 # ──────────────────────────────────────────────
@@ -109,17 +119,16 @@ WSGI_APPLICATION = 'researchcollab.wsgi.application'
 # ──────────────────────────────────────────────
 # Database — PostgreSQL
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+#
+# On Render: set DATABASE_URL env var (auto-provided when you link a DB).
+# Locally: falls back to your local PostgreSQL instance.
 # ──────────────────────────────────────────────
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'researchcollab_db',        # Database name
-        'USER': 'postgres',                  # PostgreSQL username
-        'PASSWORD': 'Nancy123abc@',          # ← CHANGE THIS to your password
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://postgres:Nancy123abc%40@localhost:5432/researchcollab_db',
+        conn_max_age=600,
+    )
 }
 
 
@@ -157,14 +166,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise compressed & cached static file storage for production.
-# In development (DEBUG=True) Django's default storage is used instead,
-# so you don't need to run collectstatic during development.
-if not DEBUG:
-    STORAGES = {
-        'staticfiles': {
-            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-        },
-    }
+STORAGES = {
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 
 # ──────────────────────────────────────────────

@@ -1,0 +1,40 @@
+   git add .
+   git commit -m "Render deployment config"
+   git push origin main# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Django
+staticfiles/
+*.sqlite3
+db.sqlite3
+
+# Media uploads (keep structure, ignore actual files)
+media/project_documents/*
+!media/project_documents/.gitkeep
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
