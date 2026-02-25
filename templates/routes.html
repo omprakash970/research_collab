@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}All Routes – ResearchCollab{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">🗺️ Route Map</h2>
+            <p class="text-muted">All available pages and endpoints in ResearchCollab</p>
+        </div>
+
+        {% for group in routes %}
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+            <div class="card-header bg-dark text-white fw-semibold rounded-top-3">
+                {{ group.section }}
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 20%;">Page</th>
+                            <th style="width: 35%;">URL</th>
+                            <th style="width: 12%;">Method</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in group.items %}
+                        <tr>
+                            <td class="fw-semibold">{{ item.name }}</td>
+                            <td>
+                                {% if '<' in item.url %}
+                                    <code class="text-muted">{{ item.url }}</code>
+                                {% else %}
+                                    <a href="{{ item.url }}" class="text-decoration-none">
+                                        <code>{{ item.url }}</code>
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% for m in item.method.split %}
+                                    {% if m == '/' %}
+                                    {% elif m == 'GET' %}
+                                        <span class="badge bg-success">GET</span>
+                                    {% elif m == 'POST' %}
+                                        <span class="badge bg-primary">POST</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td class="text-muted">{{ item.description }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Quick Links -->
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+            <div class="card-body text-center py-4">
+                <h5 class="fw-bold mb-3">Quick Links</h5>
+                <a href="/login/" class="btn btn-outline-primary btn-sm me-2 mb-2">🔑 Login</a>
+                <a href="/register/" class="btn btn-outline-success btn-sm me-2 mb-2">📝 Register</a>
+                <a href="/dashboard/" class="btn btn-outline-dark btn-sm me-2 mb-2">🏠 Dashboard</a>
+                <a href="/projects/" class="btn btn-outline-secondary btn-sm me-2 mb-2">📁 Projects</a>
+                <a href="/admin/" class="btn btn-outline-danger btn-sm me-2 mb-2">⚙️ Admin Panel</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

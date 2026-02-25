@@ -7,7 +7,10 @@ Media files are served by Django only when DEBUG is True.
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import include, path
+
+from . import views as root_views
 
 # ──────────────────────────────────────────────
 # Admin site branding
@@ -17,6 +20,12 @@ admin.site.site_title = 'ResearchCollab Admin'
 admin.site.index_title = 'Platform Management'
 
 urlpatterns = [
+    # Root URL → login page
+    path('', lambda request: redirect('accounts:login'), name='home'),
+
+    # Route map (lists all available pages)
+    path('routes/', root_views.routes_view, name='routes'),
+
     path('admin/', admin.site.urls),
 
     # App URL includes
