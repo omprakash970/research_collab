@@ -7,21 +7,24 @@
     <div class="col-lg-10">
 
         <!-- Header -->
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">🗺️ Route Map</h2>
+        <div class="text-center mb-5">
+            <div class="avatar-circle mx-auto mb-3" style="background: linear-gradient(135deg, var(--rc-primary-solid), var(--rc-accent)); width:64px; height:64px; font-size:1.5rem;">
+                <i class="bi bi-signpost-split-fill"></i>
+            </div>
+            <h2 class="fw-bold">Route Map</h2>
             <p class="text-muted">All available pages and endpoints in ResearchCollab</p>
         </div>
 
         {% for group in routes %}
-        <div class="card shadow-sm border-0 rounded-3 mb-4">
-            <div class="card-header bg-dark text-white fw-semibold rounded-top-3">
-                {{ group.section }}
+        <div class="card card-elevated mb-4" style="border: none !important;">
+            <div class="card-header py-3 px-4" style="background: #070b14 !important; color: var(--rc-text-muted) !important; border-radius: var(--rc-radius) var(--rc-radius) 0 0 !important;">
+                <i class="bi bi-folder2-open me-2"></i>{{ group.section }}
             </div>
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
-                            <th style="width: 20%;">Page</th>
+                            <th class="ps-4" style="width: 20%;">Page</th>
                             <th style="width: 35%;">URL</th>
                             <th style="width: 12%;">Method</th>
                             <th>Description</th>
@@ -30,13 +33,13 @@
                     <tbody>
                         {% for item in group.items %}
                         <tr>
-                            <td class="fw-semibold">{{ item.name }}</td>
+                            <td class="ps-4 fw-semibold">{{ item.name }}</td>
                             <td>
                                 {% if '<' in item.url %}
-                                    <code class="text-muted">{{ item.url }}</code>
+                                    <code style="background: var(--rc-bg-surface); padding: .2em .5em; border-radius: .25rem; color: var(--rc-text-faint); font-size:.8rem;">{{ item.url }}</code>
                                 {% else %}
                                     <a href="{{ item.url }}" class="text-decoration-none">
-                                        <code>{{ item.url }}</code>
+                                        <code style="background: rgba(99,102,241,.1); padding: .2em .5em; border-radius: .25rem; color: var(--rc-primary); font-size:.8rem;">{{ item.url }}</code>
                                     </a>
                                 {% endif %}
                             </td>
@@ -44,13 +47,13 @@
                                 {% for m in item.method.split %}
                                     {% if m == '/' %}
                                     {% elif m == 'GET' %}
-                                        <span class="badge bg-success">GET</span>
+                                        <span class="badge" style="background: rgba(52,211,153,.12); color: var(--rc-success); font-size:.7rem;">GET</span>
                                     {% elif m == 'POST' %}
-                                        <span class="badge bg-primary">POST</span>
+                                        <span class="badge" style="background: rgba(99,102,241,.12); color: var(--rc-primary); font-size:.7rem;">POST</span>
                                     {% endif %}
                                 {% endfor %}
                             </td>
-                            <td class="text-muted">{{ item.description }}</td>
+                            <td class="text-muted small">{{ item.description }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -60,18 +63,19 @@
         {% endfor %}
 
         <!-- Quick Links -->
-        <div class="card shadow-sm border-0 rounded-3 mb-4">
+        <div class="card card-elevated" style="border: none !important;">
             <div class="card-body text-center py-4">
-                <h5 class="fw-bold mb-3">Quick Links</h5>
-                <a href="/login/" class="btn btn-outline-primary btn-sm me-2 mb-2">🔑 Login</a>
-                <a href="/register/" class="btn btn-outline-success btn-sm me-2 mb-2">📝 Register</a>
-                <a href="/dashboard/" class="btn btn-outline-dark btn-sm me-2 mb-2">🏠 Dashboard</a>
-                <a href="/projects/" class="btn btn-outline-secondary btn-sm me-2 mb-2">📁 Projects</a>
-                <a href="/admin/" class="btn btn-outline-danger btn-sm me-2 mb-2">⚙️ Admin Panel</a>
+                <h6 class="fw-bold mb-3"><i class="bi bi-lightning-charge me-1"></i> Quick Links</h6>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a href="/login/" class="btn btn-outline-primary btn-sm"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a>
+                    <a href="/register/" class="btn btn-outline-primary btn-sm"><i class="bi bi-person-plus me-1"></i>Register</a>
+                    <a href="/dashboard/" class="btn btn-outline-primary btn-sm"><i class="bi bi-grid me-1"></i>Dashboard</a>
+                    <a href="/projects/" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder me-1"></i>Projects</a>
+                    <a href="/admin/" class="btn btn-outline-danger btn-sm"><i class="bi bi-gear me-1"></i>Admin Panel</a>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
 {% endblock %}
-

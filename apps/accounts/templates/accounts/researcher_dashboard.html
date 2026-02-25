@@ -6,64 +6,92 @@
 <div class="row justify-content-center">
     <div class="col-lg-11">
 
-        <!-- Welcome Banner -->
-        <div class="card shadow-sm border-0 mb-4" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
-            <div class="card-body p-4 text-white">
+        <!-- Hero Banner -->
+        <div class="card hero-banner mb-4" style="background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 40%, var(--rc-accent) 100%);">
+            <div class="card-body p-4 p-md-5 text-white" style="position: relative; z-index:1;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h3 class="fw-bold mb-1">Welcome back, {{ user.get_full_name|default:user.username }} 👋</h3>
-                        <p class="mb-0 opacity-75">You are signed in as
-                            <span class="badge bg-white text-primary px-2 py-1">Researcher</span>
-                        </p>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge badge-role-researcher"><i class="bi bi-mortarboard-fill me-1"></i> Researcher</span>
+                            <span class="badge" style="background:rgba(255,255,255,.12); font-size:.7rem;">
+                                <i class="bi bi-circle-fill text-success me-1 pulse-dot" style="font-size:.4rem;"></i> Online
+                            </span>
+                        </div>
+                        <h2 class="fw-bold mb-1">Welcome back, {{ user.get_full_name|default:user.username }}</h2>
+                        <p class="mb-0 opacity-75">Access your assigned projects, documents, and discussions</p>
                     </div>
                     <div class="d-none d-md-block">
-                        <span style="font-size: 3rem;">🔬</span>
+                        <div style="font-size:4rem; opacity:.8;">🔬</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section: Your workspace -->
-        <h6 class="text-uppercase text-muted fw-bold small mb-3 mt-4">🗂️ Your Workspace</h6>
+        <!-- Workspace -->
+        <div class="section-label mt-4"><i class="bi bi-grid-fill"></i> Your Workspace</div>
         <div class="row g-4 mb-4">
             <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body p-4 text-center">
-                        <div class="stat-icon mb-3">📁</div>
-                        <h6 class="fw-bold">My Projects</h6>
-                        <p class="text-muted small mb-3">View the research projects you have been assigned to collaborate on.</p>
-                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary btn-sm px-4">View Projects</a>
+                <div class="card card-elevated stat-card h-100" style="border: none !important;">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="avatar-circle" style="background: linear-gradient(135deg, var(--rc-primary), var(--rc-accent)); width:48px; height:48px; font-size:1.2rem;">
+                                <i class="bi bi-folder-fill"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">My Projects</h6>
+                                <p class="text-muted small mb-3">View research projects you've been assigned to</p>
+                                <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary btn-sm px-3">
+                                    <i class="bi bi-arrow-right me-1"></i> View Projects
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body p-4 text-center">
-                        <div class="stat-icon mb-3">📄</div>
-                        <h6 class="fw-bold">Documents</h6>
-                        <p class="text-muted small mb-3">Access and upload documents for the projects you're working on.</p>
-                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-success btn-sm px-4">Open a Project</a>
+                <div class="card card-elevated stat-card h-100" style="border: none !important;">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="avatar-circle" style="background: linear-gradient(135deg, var(--rc-success), #059669); width:48px; height:48px; font-size:1.2rem;">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">Documents</h6>
+                                <p class="text-muted small mb-3">Access and upload documents for your projects</p>
+                                <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary btn-sm px-3">
+                                    <i class="bi bi-folder2-open me-1"></i> Open Project
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body p-4 text-center">
-                        <div class="stat-icon mb-3">💬</div>
-                        <h6 class="fw-bold">Discussions</h6>
-                        <p class="text-muted small mb-3">Collaborate with your team through project discussion threads.</p>
-                        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-info btn-sm px-4">Open a Project</a>
+                <div class="card card-elevated stat-card h-100" style="border: none !important;">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="avatar-circle" style="background: linear-gradient(135deg, var(--rc-accent), #0891b2); width:48px; height:48px; font-size:1.2rem;">
+                                <i class="bi bi-chat-dots-fill"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">Discussions</h6>
+                                <p class="text-muted small mb-3">Collaborate with your team through project threads</p>
+                                <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary btn-sm px-3">
+                                    <i class="bi bi-chat-left-text me-1"></i> Open Project
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tip card -->
-        <div class="card shadow-sm border-0 bg-white">
+        <!-- Tip Card -->
+        <div class="card card-elevated" style="border: none !important; border-left: 4px solid var(--rc-warning) !important;">
             <div class="card-body px-4 py-3 d-flex align-items-center gap-3">
-                <span class="stat-icon text-warning">💡</span>
+                <div class="avatar-circle" style="background: rgba(245,158,11,.1); color: var(--rc-warning); width:44px; height:44px; font-size:1.1rem;">
+                    <i class="bi bi-lightbulb-fill"></i>
+                </div>
                 <div>
                     <h6 class="fw-bold mb-0">Getting Started</h6>
                     <small class="text-muted">Navigate to <strong>Projects</strong> to see your assignments, upload documents, and join discussions.</small>

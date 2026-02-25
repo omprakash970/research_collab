@@ -1,124 +1,317 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ResearchCollab{% endblock %}</title>
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ── Minimal global polish (no external CSS files) ── */
-        body { min-height: 100vh; display: flex; flex-direction: column; }
+        /* ══ DARK theme tokens (default) ══ */
+        [data-bs-theme="dark"] {
+            --rc-primary: #818cf8;
+            --rc-primary-solid: #6366f1;
+            --rc-primary-dark: #4f46e5;
+            --rc-accent: #22d3ee;
+            --rc-success: #34d399;
+            --rc-warning: #fbbf24;
+            --rc-danger: #f87171;
+            --rc-bg-body: #0b0f19;
+            --rc-bg-card: #111827;
+            --rc-bg-card-hover: #161e2e;
+            --rc-bg-elevated: #151d2e;
+            --rc-bg-surface: #1e293b;
+            --rc-bg-input: #0f172a;
+            --rc-border: #1e293b;
+            --rc-border-light: #293548;
+            --rc-text: #e2e8f0;
+            --rc-text-muted: #94a3b8;
+            --rc-text-faint: #64748b;
+            --rc-navbar-bg: linear-gradient(180deg, #0d1321, #0b0f19);
+            --rc-footer-bg: #070b14;
+            --rc-shadow: 0 2px 8px rgba(0,0,0,.35), 0 4px 16px rgba(0,0,0,.2);
+            --rc-shadow-md: 0 4px 24px rgba(0,0,0,.4), 0 8px 32px rgba(0,0,0,.25);
+            --rc-shadow-lg: 0 8px 40px rgba(0,0,0,.5), 0 16px 56px rgba(0,0,0,.3);
+        }
+        /* ══ LIGHT theme tokens ══ */
+        [data-bs-theme="light"] {
+            --rc-primary: #6366f1;
+            --rc-primary-solid: #4f46e5;
+            --rc-primary-dark: #3730a3;
+            --rc-accent: #06b6d4;
+            --rc-success: #10b981;
+            --rc-warning: #f59e0b;
+            --rc-danger: #ef4444;
+            --rc-bg-body: #f1f5f9;
+            --rc-bg-card: #ffffff;
+            --rc-bg-card-hover: #f8fafc;
+            --rc-bg-elevated: #ffffff;
+            --rc-bg-surface: #f1f5f9;
+            --rc-bg-input: #ffffff;
+            --rc-border: #e2e8f0;
+            --rc-border-light: #cbd5e1;
+            --rc-text: #0f172a;
+            --rc-text-muted: #64748b;
+            --rc-text-faint: #94a3b8;
+            --rc-navbar-bg: linear-gradient(180deg, #0f172a, #1e293b);
+            --rc-footer-bg: #0f172a;
+            --rc-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 14px rgba(0,0,0,.04);
+            --rc-shadow-md: 0 4px 20px rgba(0,0,0,.08), 0 8px 32px rgba(0,0,0,.06);
+            --rc-shadow-lg: 0 8px 40px rgba(0,0,0,.1), 0 16px 56px rgba(0,0,0,.06);
+        }
+        :root { --rc-radius: 1rem; --rc-radius-sm: .625rem; --rc-transition: all .25s cubic-bezier(.4,0,.2,1); }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh; display: flex; flex-direction: column;
+            background: var(--rc-bg-body) !important; color: var(--rc-text) !important;
+            -webkit-font-smoothing: antialiased; transition: background .3s ease, color .3s ease;
+        }
         main.container { flex: 1; }
-        .navbar { box-shadow: 0 2px 8px rgba(0,0,0,.15); }
-        .brand-accent { color: #6ea8fe; }
-        .card { border-radius: .75rem !important; }
-        .breadcrumb { background: transparent; padding: 0; margin-bottom: 0; }
-        .badge-role-admin { background: linear-gradient(135deg,#dc3545,#c82333); }
-        .badge-role-researcher { background: linear-gradient(135deg,#0d6efd,#0a58ca); }
-        .stat-icon { font-size: 2rem; line-height: 1; }
+        h1,h2,h3,h4,h5,h6 { font-weight:700; letter-spacing:-.025em; color:var(--rc-text) !important; }
+        .text-gradient { background:linear-gradient(135deg,var(--rc-primary),var(--rc-accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .text-muted { color:var(--rc-text-muted) !important; }
+        p,span,small,label,li,td,th { color:inherit; }
+
+        /* Cards */
+        .card { background:var(--rc-bg-card) !important; border:1px solid var(--rc-border) !important; border-radius:var(--rc-radius) !important; box-shadow:var(--rc-shadow); transition:var(--rc-transition); color:var(--rc-text) !important; }
+        .card:hover { box-shadow:var(--rc-shadow-md); }
+        .card-header { background:var(--rc-bg-elevated) !important; border-bottom:1px solid var(--rc-border) !important; color:var(--rc-text) !important; }
+        .card-body { color:var(--rc-text) !important; }
+        .card-elevated { background:var(--rc-bg-elevated) !important; border:1px solid var(--rc-border-light) !important; box-shadow:var(--rc-shadow-md); }
+        .card-elevated:hover { box-shadow:var(--rc-shadow-lg); transform:translateY(-2px); }
+
+        /* Navbar */
+        .rc-navbar { background:var(--rc-navbar-bg) !important; box-shadow:0 4px 24px rgba(0,0,0,.3); padding:.5rem 0; border-bottom:1px solid var(--rc-border); }
+        .rc-navbar .navbar-brand { font-weight:800; font-size:1.25rem; letter-spacing:-.03em; color:#fff !important; }
+        .rc-brand-icon { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; background:linear-gradient(135deg,var(--rc-primary-solid),var(--rc-accent)); border-radius:.5rem; font-size:1.1rem; margin-right:.5rem; }
+        .rc-navbar .nav-link { font-weight:500; font-size:.875rem; padding:.5rem 1rem !important; border-radius:.5rem; transition:var(--rc-transition); color:rgba(255,255,255,.65) !important; }
+        .rc-navbar .nav-link:hover { background:rgba(255,255,255,.08); color:#fff !important; }
+
+        /* Badges */
+        .badge-role-admin { background:linear-gradient(135deg,#f87171,#ef4444) !important; color:#fff !important; font-weight:600; font-size:.7rem; letter-spacing:.03em; text-transform:uppercase; padding:.3em .7em; border-radius:.375rem; }
+        .badge-role-researcher { background:linear-gradient(135deg,var(--rc-primary),var(--rc-primary-dark)) !important; color:#fff !important; font-weight:600; font-size:.7rem; letter-spacing:.03em; text-transform:uppercase; padding:.3em .7em; border-radius:.375rem; }
+
+        /* Buttons */
+        .btn { font-weight:600; font-size:.875rem; border-radius:var(--rc-radius-sm); padding:.5rem 1.25rem; transition:var(--rc-transition); }
+        .btn:hover { transform:translateY(-1px); }
+        .btn:active { transform:translateY(0); }
+        .btn-primary { background:linear-gradient(135deg,var(--rc-primary-solid),var(--rc-primary-dark)) !important; border:none !important; box-shadow:0 2px 12px rgba(99,102,241,.3); color:#fff !important; }
+        .btn-primary:hover { background:linear-gradient(135deg,var(--rc-primary),var(--rc-primary-solid)) !important; box-shadow:0 4px 20px rgba(99,102,241,.45); color:#fff !important; }
+        .btn-success { background:linear-gradient(135deg,var(--rc-success),#059669) !important; border:none !important; color:#fff !important; }
+        .btn-warning { background:linear-gradient(135deg,var(--rc-warning),#d97706) !important; border:none !important; color:#fff !important; }
+        .btn-danger { background:linear-gradient(135deg,var(--rc-danger),#dc2626) !important; border:none !important; color:#fff !important; }
+        .btn-outline-primary { border-color:var(--rc-primary) !important; color:var(--rc-primary) !important; background:transparent !important; }
+        .btn-outline-primary:hover { background:var(--rc-primary-solid) !important; color:#fff !important; border-color:var(--rc-primary-solid) !important; }
+        .btn-outline-secondary { border-color:var(--rc-border-light) !important; color:var(--rc-text-muted) !important; background:transparent !important; }
+        .btn-outline-secondary:hover { background:var(--rc-bg-surface) !important; color:var(--rc-text) !important; }
+        .btn-outline-warning { border-color:var(--rc-warning) !important; color:var(--rc-warning) !important; background:transparent !important; }
+        .btn-outline-warning:hover { background:var(--rc-warning) !important; color:#000 !important; }
+        .btn-outline-danger { border-color:var(--rc-danger) !important; color:var(--rc-danger) !important; background:transparent !important; }
+        .btn-outline-danger:hover { background:var(--rc-danger) !important; color:#fff !important; }
+        .btn-outline-light { border-color:rgba(255,255,255,.25) !important; color:rgba(255,255,255,.85) !important; }
+        .btn-outline-light:hover { background:rgba(255,255,255,.1) !important; color:#fff !important; }
+
+        /* Tables */
+        .table { font-size:.875rem; color:var(--rc-text) !important; --bs-table-bg:transparent; --bs-table-color:var(--rc-text); }
+        .table thead th { font-weight:600; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--rc-text-faint) !important; border-bottom:2px solid var(--rc-border) !important; padding:1rem; }
+        .table-dark th,.table-dark thead th { background:var(--rc-footer-bg) !important; color:var(--rc-text-muted) !important; border-color:var(--rc-border) !important; }
+        .table tbody td { padding:.875rem 1rem; vertical-align:middle; border-color:var(--rc-border) !important; color:var(--rc-text) !important; }
+        .table-hover tbody tr:hover { background:var(--rc-bg-surface) !important; --bs-table-hover-bg:var(--rc-bg-surface); }
+
+        /* Forms */
+        .form-control,.form-select { background:var(--rc-bg-input) !important; border:1.5px solid var(--rc-border-light) !important; border-radius:var(--rc-radius-sm); padding:.65rem 1rem; font-size:.9rem; color:var(--rc-text) !important; transition:var(--rc-transition); }
+        .form-control:focus,.form-select:focus { border-color:var(--rc-primary) !important; box-shadow:0 0 0 4px rgba(99,102,241,.15) !important; background:var(--rc-bg-input) !important; color:var(--rc-text) !important; }
+        .form-control::placeholder { color:var(--rc-text-faint) !important; }
+        .form-label { font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; color:var(--rc-text-muted) !important; margin-bottom:.375rem; }
+        .form-text { color:var(--rc-text-faint) !important; }
+        .form-check-input { background-color:var(--rc-bg-input) !important; border-color:var(--rc-border-light) !important; }
+        .form-check-input:checked { background-color:var(--rc-primary-solid) !important; border-color:var(--rc-primary-solid) !important; }
+        .form-check-label { color:var(--rc-text) !important; }
+
+        /* Breadcrumb */
+        .breadcrumb { background:transparent; padding:0; margin-bottom:0; font-size:.8rem; }
+        .breadcrumb-item a { color:var(--rc-primary) !important; text-decoration:none; }
+        .breadcrumb-item.active { color:var(--rc-text-faint) !important; }
+        .breadcrumb-item+.breadcrumb-item::before { color:var(--rc-text-faint) !important; }
+
+        /* Status */
+        .badge-status-active { background:rgba(52,211,153,.12); color:var(--rc-success); border:1px solid rgba(52,211,153,.25); font-weight:600; font-size:.75rem; padding:.35em .75em; border-radius:2rem; display:inline-block; }
+        .badge-status-completed { background:rgba(148,163,184,.1); color:var(--rc-text-muted); border:1px solid rgba(148,163,184,.2); font-weight:600; font-size:.75rem; padding:.35em .75em; border-radius:2rem; display:inline-block; }
+
+        /* Alerts */
+        .alert { border:none !important; border-radius:var(--rc-radius-sm) !important; font-size:.875rem; font-weight:500; }
+        .alert-success { background:rgba(16,185,129,.12) !important; color:var(--rc-success) !important; border-left:4px solid var(--rc-success) !important; }
+        .alert-danger { background:rgba(239,68,68,.1) !important; color:var(--rc-danger) !important; border-left:4px solid var(--rc-danger) !important; }
+        .alert-warning { background:rgba(245,158,11,.1) !important; color:var(--rc-warning) !important; border-left:4px solid var(--rc-warning) !important; }
+        .alert-info { background:rgba(6,182,212,.08) !important; color:var(--rc-accent) !important; border-left:4px solid var(--rc-accent) !important; }
+        .alert-primary { background:rgba(99,102,241,.1) !important; color:var(--rc-primary) !important; border-left:4px solid var(--rc-primary) !important; }
+
+        /* Dropdown */
+        .dropdown-menu { background:var(--rc-bg-elevated) !important; border:1px solid var(--rc-border-light) !important; border-radius:var(--rc-radius-sm) !important; box-shadow:var(--rc-shadow-md); padding:.5rem; }
+        .dropdown-item { border-radius:.375rem; font-size:.875rem; font-weight:500; padding:.5rem .75rem; color:var(--rc-text) !important; }
+        .dropdown-item:hover,.dropdown-item:focus { background:var(--rc-bg-surface) !important; color:var(--rc-text) !important; }
+        .dropdown-divider { border-color:var(--rc-border) !important; }
+
+        /* List Group */
+        .list-group-item { background:transparent !important; border-color:var(--rc-border) !important; color:var(--rc-text) !important; }
+
+        /* Hero */
+        .hero-banner { border:none !important; position:relative; overflow:hidden; }
+        .hero-banner::before { content:''; position:absolute; top:-50%; right:-20%; width:400px; height:400px; border-radius:50%; background:rgba(255,255,255,.04); pointer-events:none; }
+        .hero-banner::after { content:''; position:absolute; bottom:-30%; left:-10%; width:250px; height:250px; border-radius:50%; background:rgba(255,255,255,.025); pointer-events:none; }
+
+        /* Stat / Avatar */
+        .stat-icon { font-size:2.25rem; line-height:1; }
+        .stat-card { transition:var(--rc-transition); cursor:default; }
+        .stat-card:hover { transform:translateY(-4px); box-shadow:var(--rc-shadow-lg); }
+        .avatar-circle { width:36px; height:36px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; color:#fff; flex-shrink:0; }
+
+        /* Section Label */
+        .section-label { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--rc-text-faint); margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+        .section-label::after { content:''; flex:1; height:1px; background:var(--rc-border); }
+
+        /* Empty State */
+        .empty-state { padding:3rem 1rem; text-align:center; }
+        .empty-state-icon { font-size:3.5rem; opacity:.3; margin-bottom:1rem; }
+
+        /* Footer */
+        .rc-footer { background:var(--rc-footer-bg) !important; color:var(--rc-text-faint); border-top:1px solid var(--rc-border) !important; }
+        .rc-footer a { color:var(--rc-primary); text-decoration:none; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-track { background:var(--rc-bg-body); }
+        ::-webkit-scrollbar-thumb { background:var(--rc-border-light); border-radius:4px; }
+        ::-webkit-scrollbar-thumb:hover { background:var(--rc-text-faint); }
+
+        /* Animations */
+        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .pulse-dot { animation:pulse-dot 2s ease-in-out infinite; }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .fade-in { animation:fadeInUp .35s ease-out; }
+
+        /* Global overrides */
+        .bg-light { background:var(--rc-bg-body) !important; }
+        .bg-white { background:var(--rc-bg-card) !important; }
+        .border,.border-bottom,.border-top,.border-start,.border-end { border-color:var(--rc-border) !important; }
+        hr { border-color:var(--rc-border) !important; opacity:1; }
+        code { color:var(--rc-primary); }
+        a { color:var(--rc-primary); }
+        a:hover { color:var(--rc-accent); }
+        .invalid-feedback { color:var(--rc-danger) !important; }
+        .is-invalid { border-color:var(--rc-danger) !important; }
+        [data-bs-theme="dark"] .btn-close { filter:invert(1) grayscale(100%) brightness(200%); }
+
+        /* Theme Toggle */
+        .theme-toggle { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.8); cursor:pointer; transition:var(--rc-transition); font-size:1.1rem; padding:0; line-height:1; }
+        .theme-toggle:hover { background:rgba(255,255,255,.18); color:#fff; transform:scale(1.1); }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-light">
-
-<!-- ── Navbar ── -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark rc-navbar sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold fs-5" href="{% url 'accounts:dashboard' %}">
-            🔬 <span class="brand-accent">Research</span>Collab
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'accounts:dashboard' %}">
+            <span class="rc-brand-icon">🔬</span>
+            <span>Research<span style="color: var(--rc-accent);">Collab</span></span>
         </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
-                data-bs-target="#mainNav" aria-controls="mainNav"
-                aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="mainNav">
             {% if user.is_authenticated %}
-                <ul class="navbar-nav me-auto ms-3">
-                    <li class="nav-item">
-                        <a class="nav-link px-3" href="{% url 'accounts:dashboard' %}">🏠 Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3" href="{% url 'projects:project_list' %}">📁 Projects</a>
-                    </li>
+                <ul class="navbar-nav me-auto ms-3 gap-1">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:dashboard' %}"><i class="bi bi-grid-1x2-fill me-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'projects:project_list' %}"><i class="bi bi-folder-fill me-1"></i> Projects</a></li>
                     {% if user.profile.role == 'ADMIN' %}
-                        <li class="nav-item">
-                            <a class="nav-link px-3 text-warning" href="{% url 'projects:project_create' %}">＋ New Project</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'projects:project_create' %}" style="color: var(--rc-accent) !important;"><i class="bi bi-plus-circle-fill me-1"></i> New Project</a></li>
                     {% endif %}
                 </ul>
             {% endif %}
-
-            <div class="d-flex align-items-center ms-auto gap-3">
+            <div class="d-flex align-items-center ms-auto gap-2">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode" type="button">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
                 {% if user.is_authenticated %}
                     <div class="dropdown">
-                        <a class="btn btn-outline-light btn-sm px-3 dropdown-toggle" href="#"
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ user.get_full_name|default:user.username }}
+                        <a class="btn btn-sm px-3 py-1 dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background:rgba(255,255,255,.06); color:#fff; border:1px solid rgba(255,255,255,.12); border-radius:.5rem;">
+                            <div class="avatar-circle" style="width:28px; height:28px; font-size:.7rem; background:linear-gradient(135deg,var(--rc-primary-solid),var(--rc-accent));">{{ user.username|make_list|first|upper }}</div>
+                            <span class="fw-semibold" style="font-size:.85rem;">{{ user.get_full_name|default:user.username }}</span>
                             {% if user.profile.role == 'ADMIN' %}
-                                <span class="badge badge-role-admin ms-1 px-2 py-1">Admin</span>
+                                <span class="badge badge-role-admin">Admin</span>
                             {% else %}
-                                <span class="badge badge-role-researcher ms-1 px-2 py-1">Researcher</span>
+                                <span class="badge badge-role-researcher">Researcher</span>
                             {% endif %}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                            <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}">🔒 Change Password</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Logout</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end mt-2">
+                            <li class="px-3 pt-2 pb-1"><small class="fw-semibold" style="font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--rc-text-faint);">Account</small></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}"><i class="bi bi-shield-lock me-2"></i>Change Password</a></li>
+                            <li><hr class="dropdown-divider mx-2"></li>
+                            <li><a class="dropdown-item" style="color:var(--rc-danger) !important;" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
                         </ul>
                     </div>
                 {% else %}
-                    <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-sm px-3">Register</a>
-                    <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm px-3 fw-semibold">Login</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-sm px-3"><i class="bi bi-person-plus me-1"></i> Register</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-sm px-3 fw-semibold"><i class="bi bi-box-arrow-in-right me-1"></i> Sign In</a>
                 {% endif %}
             </div>
         </div>
     </div>
 </nav>
-
-<!-- ── Flash Messages ── -->
 {% if messages %}
-<div class="container mt-3">
+<div class="container mt-3 fade-in">
     {% for message in messages %}
-        <div class="alert
-            {% if message.tags == 'error' %}alert-danger
-            {% elif message.tags == 'debug' %}alert-secondary
-            {% elif 'success' in message.tags %}alert-success
-            {% elif 'warning' in message.tags %}alert-warning
-            {% elif 'info' in message.tags %}alert-info
-            {% else %}alert-primary
-            {% endif %}
-            alert-dismissible fade show shadow-sm border-0 rounded-3" role="alert">
+        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'debug' %}alert-secondary{% elif 'success' in message.tags %}alert-success{% elif 'warning' in message.tags %}alert-warning{% elif 'info' in message.tags %}alert-info{% else %}alert-primary{% endif %} alert-dismissible fade show" role="alert">
+            <i class="bi {% if message.tags == 'error' %}bi-exclamation-triangle-fill{% elif 'success' in message.tags %}bi-check-circle-fill{% elif 'warning' in message.tags %}bi-exclamation-circle-fill{% elif 'info' in message.tags %}bi-info-circle-fill{% else %}bi-bell-fill{% endif %} me-2"></i>
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 </div>
 {% endif %}
-
-<!-- ── Main Content ── -->
-<main class="container py-4">
+<main class="container py-4 fade-in">
     {% block content %}{% endblock %}
 </main>
-
-<!-- ── Footer ── -->
-<footer class="border-top mt-auto">
-    <div class="container text-center py-4">
-        <small class="text-muted">
-            &copy; {% now "Y" %} <strong>ResearchCollab</strong> — Academic Research Collaboration Platform
-        </small>
+<footer class="rc-footer mt-auto">
+    <div class="container">
+        <div class="row py-4 align-items-center">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center gap-2 mb-2 mb-md-0">
+                    <span class="rc-brand-icon" style="width:28px; height:28px; font-size:.8rem;">🔬</span>
+                    <span class="fw-bold" style="color:rgba(255,255,255,.85);">ResearchCollab</span>
+                </div>
+                <small>Academic Research Collaboration Platform</small>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <small>&copy; {% now "Y" %} ResearchCollab &middot; Built with Django + Bootstrap 5</small>
+            </div>
+        </div>
     </div>
 </footer>
-
-<!-- Bootstrap 5 JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+(function(){
+    var html=document.documentElement;
+    var btn=document.getElementById('themeToggle');
+    var icon=document.getElementById('themeIcon');
+    var saved=localStorage.getItem('rc-theme');
+    function applyTheme(t){
+        html.setAttribute('data-bs-theme',t);
+        icon.className=t==='light'?'bi bi-sun-fill':'bi bi-moon-stars-fill';
+    }
+    applyTheme(saved==='light'?'light':'dark');
+    btn.addEventListener('click',function(){
+        var c=html.getAttribute('data-bs-theme');
+        var n=c==='dark'?'light':'dark';
+        localStorage.setItem('rc-theme',n);
+        applyTheme(n);
+    });
+})();
+</script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

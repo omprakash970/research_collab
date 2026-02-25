@@ -8,28 +8,37 @@
 
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb small">
-                <li class="breadcrumb-item"><a href="{% url 'projects:project_list' %}" class="text-decoration-none">Projects</a></li>
-                <li class="breadcrumb-item active text-muted" aria-current="page">{{ project.title|truncatechars:40 }}</li>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'projects:project_list' %}" class="text-decoration-none"><i class="bi bi-folder me-1"></i>Projects</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ project.title|truncatechars:40 }}</li>
             </ol>
         </nav>
 
-        <!-- Project Header Card -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body p-4">
+        <!-- Project Header -->
+        <div class="card hero-banner mb-4" style="background: linear-gradient(135deg, #0b0f19 0%, var(--rc-primary-dark) 100%); border: none !important;">
+            <div class="card-body p-4 p-md-5 text-white" style="position: relative; z-index:1;">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h3 class="fw-bold mb-1">{{ project.title }}</h3>
-                        <p class="text-muted small mb-0">
-                            Created by <strong>{{ project.created_by.username }}</strong>
-                            on {{ project.created_at|date:"F d, Y" }}
-                        </p>
+                        <h2 class="fw-bold mb-2">{{ project.title }}</h2>
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <span class="opacity-75">
+                                <i class="bi bi-person-fill me-1"></i>{{ project.created_by.username }}
+                            </span>
+                            <span class="opacity-50">•</span>
+                            <span class="opacity-75">
+                                <i class="bi bi-calendar3 me-1"></i>{{ project.created_at|date:"F d, Y" }}
+                            </span>
+                        </div>
                     </div>
                     <div>
                         {% if project.status == 'ACTIVE' %}
-                            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 fs-6">● Active</span>
+                            <span class="badge px-3 py-2" style="background: rgba(16,185,129,.2); color: #6ee7b7; font-size:.8rem;">
+                                <i class="bi bi-circle-fill me-1 pulse-dot" style="font-size:.4rem;"></i> Active
+                            </span>
                         {% else %}
-                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-3 py-2 fs-6">● Completed</span>
+                            <span class="badge px-3 py-2" style="background: rgba(255,255,255,.15); color: rgba(255,255,255,.7); font-size:.8rem;">
+                                <i class="bi bi-check-circle-fill me-1"></i> Completed
+                            </span>
                         {% endif %}
                     </div>
                 </div>
@@ -39,102 +48,107 @@
         <div class="row g-4">
             <!-- Left Column -->
             <div class="col-lg-8">
-                <!-- Description Card -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="fw-bold mb-0">📝 Description</h6>
+                <!-- Description -->
+                <div class="card card-elevated mb-4" style="border: none !important;">
+                    <div class="card-header py-3 px-4">
+                        <h6 class="fw-bold mb-0"><i class="bi bi-text-paragraph me-2" style="color: var(--rc-primary);"></i>Description</h6>
                     </div>
                     <div class="card-body p-4">
-                        <p class="mb-0 text-secondary" style="white-space: pre-wrap; line-height: 1.7;">{{ project.description }}</p>
+                        <p class="mb-0" style="white-space: pre-wrap; line-height: 1.8; color: var(--rc-text-muted);">{{ project.description }}</p>
                     </div>
                 </div>
 
-                <!-- Documents Quick-Access Card -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white border-bottom py-3">
+                <!-- Documents -->
+                <div class="card card-elevated mb-4" style="border: none !important;">
+                    <div class="card-header py-3 px-4">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="fw-bold mb-0">📄 Documents</h6>
-                            <a href="{% url 'documents:document_upload' project_id=project.pk %}"
-                               class="btn btn-outline-success btn-sm px-3">📤 Upload</a>
+                            <h6 class="fw-bold mb-0"><i class="bi bi-file-earmark-text me-2" style="color: var(--rc-success);"></i>Documents</h6>
+                            <a href="{% url 'documents:document_upload' project_id=project.pk %}" class="btn btn-success btn-sm px-3">
+                                <i class="bi bi-cloud-arrow-up me-1"></i> Upload
+                            </a>
                         </div>
                     </div>
                     <div class="card-body p-4 text-center">
-                        <a href="{% url 'documents:document_list' project_id=project.pk %}"
-                           class="btn btn-primary px-4">View All Documents</a>
+                        <a href="{% url 'documents:document_list' project_id=project.pk %}" class="btn btn-outline-primary px-4">
+                            <i class="bi bi-collection me-1"></i> View All Documents
+                        </a>
                     </div>
                 </div>
 
-                <!-- Discussion Quick-Access Card -->
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="fw-bold mb-0">💬 Discussion</h6>
+                <!-- Discussion -->
+                <div class="card card-elevated" style="border: none !important;">
+                    <div class="card-header py-3 px-4">
+                        <h6 class="fw-bold mb-0"><i class="bi bi-chat-dots me-2" style="color: var(--rc-accent);"></i>Discussion</h6>
                     </div>
                     <div class="card-body p-4 text-center">
-                        <a href="{% url 'communication:project_messages' project_id=project.pk %}"
-                           class="btn btn-primary px-4">Open Discussion Thread</a>
+                        <a href="{% url 'communication:project_messages' project_id=project.pk %}" class="btn btn-outline-primary px-4">
+                            <i class="bi bi-chat-left-text me-1"></i> Open Discussion Thread
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Sidebar -->
+            <!-- Sidebar -->
             <div class="col-lg-4">
-                <!-- Team Card -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="fw-bold mb-0">👥 Team</h6>
+                <!-- Team -->
+                <div class="card card-elevated mb-4" style="border: none !important;">
+                    <div class="card-header py-3 px-4">
+                        <h6 class="fw-bold mb-0"><i class="bi bi-people-fill me-2" style="color: var(--rc-primary);"></i>Team</h6>
                     </div>
                     <ul class="list-group list-group-flush">
                         {% for researcher in project.researchers.all %}
-                            <li class="list-group-item d-flex align-items-center gap-2 py-3">
-                                <span class="badge badge-role-researcher rounded-circle p-2">&nbsp;</span>
-                                <span>{{ researcher.get_full_name|default:researcher.username }}</span>
+                            <li class="list-group-item d-flex align-items-center gap-3 py-3 px-4">
+                                <div class="avatar-circle" style="width:32px; height:32px; font-size:.7rem; background: linear-gradient(135deg, var(--rc-primary), var(--rc-accent));">
+                                    {{ researcher.username|make_list|first|upper }}
+                                </div>
+                                <span class="fw-medium">{{ researcher.get_full_name|default:researcher.username }}</span>
                             </li>
                         {% empty %}
-                            <li class="list-group-item text-muted small py-3">No researchers assigned yet.</li>
+                            <li class="list-group-item text-muted small py-3 px-4">
+                                <i class="bi bi-person-slash me-1"></i> No researchers assigned yet.
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
 
-                <!-- Project Info Card -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="fw-bold mb-0">ℹ️ Details</h6>
+                <!-- Details -->
+                <div class="card card-elevated mb-4" style="border: none !important;">
+                    <div class="card-header py-3 px-4">
+                        <h6 class="fw-bold mb-0"><i class="bi bi-info-circle me-2" style="color: var(--rc-accent);"></i>Details</h6>
                     </div>
-                    <div class="card-body">
-                        <table class="table table-borderless table-sm mb-0 small">
-                            <tr>
-                                <td class="text-muted fw-semibold">Status</td>
-                                <td>
-                                    {% if project.status == 'ACTIVE' %}
-                                        <span class="badge bg-success px-2 py-1">Active</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary px-2 py-1">Completed</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted fw-semibold">Created By</td>
-                                <td>{{ project.created_by.username }}</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted fw-semibold">Created</td>
-                                <td>{{ project.created_at|date:"M d, Y" }}</td>
-                            </tr>
-                        </table>
+                    <div class="card-body px-4">
+                        <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--rc-border);">
+                            <span class="text-muted small fw-semibold">Status</span>
+                            {% if project.status == 'ACTIVE' %}
+                                <span class="badge-status-active">Active</span>
+                            {% else %}
+                                <span class="badge-status-completed">Completed</span>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--rc-border);">
+                            <span class="text-muted small fw-semibold">Created By</span>
+                            <span class="small fw-medium">{{ project.created_by.username }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted small fw-semibold">Created</span>
+                            <span class="small fw-medium">{{ project.created_at|date:"M d, Y" }}</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Admin Actions Card -->
+                <!-- Admin Actions -->
                 {% if is_admin %}
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-bottom py-3">
-                            <h6 class="fw-bold mb-0">⚙️ Admin Actions</h6>
+                    <div class="card card-elevated" style="border: none !important;">
+                        <div class="card-header py-3 px-4">
+                            <h6 class="fw-bold mb-0"><i class="bi bi-gear me-2" style="color: var(--rc-warning);"></i>Admin Actions</h6>
                         </div>
-                        <div class="card-body d-grid gap-2">
-                            <a href="{% url 'projects:project_edit' pk=project.pk %}"
-                               class="btn btn-outline-warning">✏️ Edit Project</a>
-                            <a href="{% url 'projects:project_list' %}"
-                               class="btn btn-outline-secondary">← Back to Projects</a>
+                        <div class="card-body d-grid gap-2 px-4 pb-4">
+                            <a href="{% url 'projects:project_edit' pk=project.pk %}" class="btn btn-warning">
+                                <i class="bi bi-pencil-square me-1"></i> Edit Project
+                            </a>
+                            <a href="{% url 'projects:project_list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Projects
+                            </a>
                         </div>
                     </div>
                 {% endif %}

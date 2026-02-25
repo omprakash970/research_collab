@@ -4,26 +4,20 @@
 
 {% block extra_css %}
 <style>
-    .msg-bubble {
-        max-width: 72%;
-        word-wrap: break-word;
-    }
+    .msg-bubble { max-width: 70%; word-wrap: break-word; }
     .msg-mine {
-        background: linear-gradient(135deg, #d1e7dd 0%, #c3dfd5 100%);
+        background: linear-gradient(135deg, rgba(99,102,241,.15) 0%, rgba(99,102,241,.08) 100%);
+        border: 1px solid rgba(99,102,241,.2);
         border-bottom-right-radius: .25rem !important;
     }
     .msg-other {
-        background: #ffffff;
-        border: 1px solid #e9ecef;
+        background: var(--rc-bg-surface);
+        border: 1px solid var(--rc-border-light);
         border-bottom-left-radius: .25rem !important;
     }
-    .msg-thread {
-        max-height: 540px;
-        overflow-y: auto;
-        scroll-behavior: smooth;
-    }
+    .msg-thread { max-height: 560px; overflow-y: auto; scroll-behavior: smooth; }
     .msg-thread::-webkit-scrollbar { width: 6px; }
-    .msg-thread::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 3px; }
+    .msg-thread::-webkit-scrollbar-thumb { background: var(--rc-border-light); border-radius: 3px; }
 </style>
 {% endblock %}
 
@@ -31,90 +25,96 @@
 <div class="row justify-content-center">
     <div class="col-lg-10">
 
-        <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb small">
-                <li class="breadcrumb-item"><a href="{% url 'projects:project_list' %}" class="text-decoration-none">Projects</a></li>
-                <li class="breadcrumb-item">
-                    <a href="{% url 'projects:project_detail' pk=project.pk %}" class="text-decoration-none">{{ project.title|truncatechars:30 }}</a>
-                </li>
-                <li class="breadcrumb-item active text-muted" aria-current="page">Discussion</li>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'projects:project_list' %}" class="text-decoration-none"><i class="bi bi-folder me-1"></i>Projects</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'projects:project_detail' pk=project.pk %}" class="text-decoration-none">{{ project.title|truncatechars:30 }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Discussion</li>
             </ol>
         </nav>
 
-        <!-- Page Header Card -->
-        <div class="card shadow-sm border-0 mb-4">
+        <div class="card card-elevated mb-4" style="border: none !important;">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fw-bold mb-1">💬 Discussion</h4>
-                        <p class="text-muted small mb-0">
-                            Conversation thread for <strong>{{ project.title }}</strong>
-                        </p>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="avatar-circle" style="background: linear-gradient(135deg, var(--rc-accent), #0891b2); width:48px; height:48px; font-size:1.2rem;">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">Discussion</h4>
+                            <p class="text-muted small mb-0">Conversation thread for <strong>{{ project.title }}</strong></p>
+                        </div>
                     </div>
-                    <a href="{% url 'projects:project_detail' pk=project.pk %}"
-                       class="btn btn-outline-secondary btn-sm px-3">← Back to Project</a>
+                    <a href="{% url 'projects:project_detail' pk=project.pk %}" class="btn btn-outline-secondary btn-sm px-3">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Project
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Message Thread Card -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-white border-bottom py-3">
-                <h6 class="fw-bold mb-0 small text-muted text-uppercase">Message Thread</h6>
+        <!-- Message Thread -->
+        <div class="card card-elevated mb-4" style="border: none !important;">
+            <div class="card-header py-3 px-4">
+                <div class="d-flex align-items-center gap-2">
+                    <h6 class="fw-bold mb-0 small text-uppercase" style="color: var(--rc-text-faint); letter-spacing:.08em;">
+                        <i class="bi bi-chat-square-text me-1"></i> Message Thread
+                    </h6>
+                    {% if thread %}
+                        <span class="badge" style="background: var(--rc-bg-surface); color: var(--rc-text-muted); font-size:.7rem;">{{ thread|length }} messages</span>
+                    {% endif %}
+                </div>
             </div>
-            <div class="card-body msg-thread p-4" id="messageThread" style="background: #f8f9fa;">
+            <div class="card-body msg-thread p-4" id="messageThread" style="background: var(--rc-bg-body);">
                 {% if thread %}
                     {% for msg in thread %}
                         {% if msg.sender == request.user %}
-                            <!-- Own message → right -->
                             <div class="d-flex justify-content-end mb-3">
-                                <div class="msg-bubble msg-mine rounded-3 p-3 shadow-sm">
+                                <div class="msg-bubble msg-mine rounded-3 p-3">
                                     <div class="d-flex justify-content-between align-items-center mb-1 gap-3">
-                                        <small class="fw-bold text-success">You</small>
-                                        <small class="text-muted" style="font-size:.7rem;">{{ msg.created_at|date:"M d, Y · H:i" }}</small>
+                                        <small class="fw-bold" style="color: var(--rc-primary);">You</small>
+                                        <small style="color: var(--rc-text-faint); font-size:.7rem;">{{ msg.created_at|date:"M d, Y · H:i" }}</small>
                                     </div>
-                                    <p class="mb-0 small" style="white-space: pre-wrap;">{{ msg.message }}</p>
+                                    <p class="mb-0 small" style="white-space: pre-wrap; color: var(--rc-text);">{{ msg.message }}</p>
                                 </div>
                             </div>
                         {% else %}
-                            <!-- Other message → left -->
-                            <div class="d-flex justify-content-start mb-3">
-                                <div class="msg-bubble msg-other rounded-3 p-3 shadow-sm">
+                            <div class="d-flex justify-content-start mb-3 gap-2">
+                                <div class="avatar-circle flex-shrink-0" style="width:32px; height:32px; font-size:.65rem; background: linear-gradient(135deg, var(--rc-primary-solid), var(--rc-accent)); margin-top:2px;">
+                                    {{ msg.sender.username|make_list|first|upper }}
+                                </div>
+                                <div class="msg-bubble msg-other rounded-3 p-3">
                                     <div class="d-flex justify-content-between align-items-center mb-1 gap-3">
-                                        <small class="fw-bold text-primary">{{ msg.sender.username }}</small>
-                                        <small class="text-muted" style="font-size:.7rem;">{{ msg.created_at|date:"M d, Y · H:i" }}</small>
+                                        <small class="fw-bold" style="color: var(--rc-text);">{{ msg.sender.username }}</small>
+                                        <small style="color: var(--rc-text-faint); font-size:.7rem;">{{ msg.created_at|date:"M d, Y · H:i" }}</small>
                                     </div>
-                                    <p class="mb-0 small" style="white-space: pre-wrap;">{{ msg.message }}</p>
+                                    <p class="mb-0 small" style="white-space: pre-wrap; color: var(--rc-text-muted);">{{ msg.message }}</p>
                                 </div>
                             </div>
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    <div class="text-center py-5">
-                        <div class="stat-icon text-muted mb-3">💬</div>
-                        <h6 class="text-muted fw-semibold">No messages yet</h6>
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="bi bi-chat-square"></i></div>
+                        <h6 class="fw-bold text-muted">No messages yet</h6>
                         <p class="text-muted small mb-0">Start the conversation by posting the first message below.</p>
                     </div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Post Message Form Card -->
-        <div class="card shadow-sm border-0">
+        <!-- Post Message -->
+        <div class="card card-elevated" style="border: none !important;">
             <div class="card-body p-4">
                 <form method="post" novalidate>
                     {% csrf_token %}
-                    <label class="form-label fw-semibold small text-secondary">Post a Message</label>
+                    <label class="form-label"><i class="bi bi-send me-1"></i> Post a Message</label>
                     {{ form.message }}
                     {% if form.message.errors %}
-                        <div class="invalid-feedback d-block">
-                            {% for error in form.message.errors %}{{ error }}{% endfor %}
-                        </div>
+                        <div class="invalid-feedback d-block">{% for error in form.message.errors %}{{ error }}{% endfor %}</div>
                     {% endif %}
                     <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary px-4">
-                            Send Message →
+                            <i class="bi bi-send-fill me-1"></i> Send Message
                         </button>
                     </div>
                 </form>
@@ -127,7 +127,6 @@
 
 {% block extra_js %}
 <script>
-    // Auto-scroll message thread to bottom on page load
     const t = document.getElementById('messageThread');
     if (t) t.scrollTop = t.scrollHeight;
 </script>
