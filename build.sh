@@ -25,12 +25,14 @@ else:
     print('Superuser oppie_549 already exists')
 if not User.objects.filter(username='admin').exists():
     u = User.objects.create_user('admin', 'admin@researchcollab.com', 'admin123')
-    u.is_staff = False
     u.save()
     p = Profile.objects.get(user=u)
     p.role = 'ADMIN'
     p.save()
     print('App admin created with ADMIN role')
 else:
-    print('App admin already exists')
+    u = User.objects.get(username='admin')
+    u.set_password('admin123')
+    u.save()
+    print('App admin password reset')
 "
