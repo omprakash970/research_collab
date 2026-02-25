@@ -32,17 +32,21 @@ SECRET_KEY = os.environ.get(
 # Set DEBUG=False on Render via env var. Locally defaults to True.
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-# Render provides the RENDER_EXTERNAL_HOSTNAME env var.
-# Accept that hostname + localhost for local dev.
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# Hosts allowed to serve the app
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'django.imoppie.tech',
+    'www.django.imoppie.tech',
+    'researchcollab.onrender.com',
+]
 
-# CSRF trusted origins for Render
-CSRF_TRUSTED_ORIGINS = []
-if RENDER_EXTERNAL_HOSTNAME:
-    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
+# CSRF trusted origins (required for POST requests in production)
+CSRF_TRUSTED_ORIGINS = [
+    'https://django.imoppie.tech',
+    'https://www.django.imoppie.tech',
+    'https://researchcollab.onrender.com',
+]
 
 
 # ──────────────────────────────────────────────
