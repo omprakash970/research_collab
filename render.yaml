@@ -9,6 +9,7 @@ services:
     plan: free
     runtime: python
     buildCommand: "./build.sh"
+    preDeployCommand: "./release.sh"
     startCommand: "gunicorn researchcollab.wsgi:application"
     envVars:
       - key: SECRET_KEY
